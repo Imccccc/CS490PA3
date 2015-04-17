@@ -135,11 +135,10 @@ public class MultithreadedChatServer {
 					}
 				}
 				catch(Exception e){
-					e.printStackTrace();
+					//e.printStackTrace();
 					try {
 						socket.close();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}

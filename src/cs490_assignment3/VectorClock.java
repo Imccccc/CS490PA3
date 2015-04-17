@@ -19,8 +19,11 @@ public class VectorClock{
 
 	public void increment(String processName){
 		if(vcMap.putIfAbsent(processName, 1) != null){
-			Integer count = vcMap.get(processName); // should be count+1?
-			vcMap.put(processName, count);
+			Integer count = vcMap.get(processName);
+			vcMap.put(processName, count+1);
+			count = vcMap.get(processName);
+			//System.out.println("VectorClock: "+ processName + " "+ count);
+
 		}
 	}
 
@@ -34,7 +37,7 @@ public class VectorClock{
 
 		Set<String> keySet = new HashSet<>();
 		keySet.addAll(compareMap.keySet());
-		keySet.addAll(compareMap.keySet());
+		keySet.addAll(vcMap.keySet());
 		boolean greater = false, smaller = false;
 		String[] keyArray = new String[keySet.size()];
 		keySet.toArray(keyArray);
@@ -61,7 +64,35 @@ public class VectorClock{
 		else if(greater == true) return 1;
 		else return -1;
 	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if (!(obj instanceof VectorClock))
+			return false;	
+		if (obj == this)
+			return true;
+		
+		ConcurrentHashMap<String, Integer> compareMap = ((VectorClock) obj).getMap();
 
+		Set<String> keySet = new HashSet<>();
+		keySet.addAll(vcMap.keySet());
+		keySet.addAll(compareMap.keySet());
+		String[] keyArray = new String[keySet.size()];
+		keySet.toArray(keyArray);
+		for(String key : keyArray){
+			Integer count, compareCount;
+			count = vcMap.get(key);
+			compareCount = compareMap.get(key);
+			if(count == null || compareCount == null){
+				return false;
+			}
+			else{
+				if(count != compareCount)	return false;
+			}
+		}
+		return true;
+
+	}
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();

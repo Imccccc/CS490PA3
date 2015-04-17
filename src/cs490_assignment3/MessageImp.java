@@ -38,12 +38,13 @@ public class MessageImp implements Message, Comparable<Message>{
 
 	@Override
 	public boolean equals(Object obj) {
+		//System.out.println("MessageImp equals is called");
 		if (!(obj instanceof Message))
 			return false;	
 		if (obj == this)
 			return true;
 
-		return this.contents.equals(((Message) obj).getMessageContents()) && this.vc.compareTo(((Message) obj).getMessageVC())==0;
+		return this.vc.equals(((Message) obj).getMessageVC());
 	}
  
 	@Override
